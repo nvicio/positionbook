@@ -3,7 +3,7 @@
 ###  Documentation
 This is a simple position book web app - built as a Spring Restful application.
 According to the problem definition, several assumptions were made:
-* Event order can only accept one of the types "BUY", "SELL", "CANCEL", otherwise will return a 403 Bad Request.
+* Event order can only accept one of the types "BUY", "SELL", "CANCEL", otherwise will return a 400 Bad Request.
 * An account can be identified by an Integer accountId.
 * A security can be identified by an Integer securityId. (In reality, it could also be identified by a String such as ticker or other fields typically held by a reference data source).
 * On Cancelling an order: assuming we can only cancel your last order. Otherwise, if we cancel an order happened long ago in the past (processed, cleared), any the subsequent orders that relying on the position from that order will be impacted (For example a BUY order was canceled then the subsequent SELL is not possible if the current position does not allow).
