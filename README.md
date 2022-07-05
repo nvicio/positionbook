@@ -72,7 +72,7 @@ Response: Position of given securities in an account
 ```
 Curl:
 ```
-curl -X GET --header 'Accept: application/json' 'http://localhost:8080/positionbook/position/100/111'
+curl -X GET --header 'Accept: application/json' 'http://localhost:8080/positionbook/position/100?securityId=11'
 ```
 Response Codes: 200 OK, 400 Bad Request. 
 ### Obtain history orders (events)
