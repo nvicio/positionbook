@@ -14,6 +14,12 @@ public interface OrderService {
     Order getOrderById(Long orderId);
 
     /**
+     * Return the last order for given deque
+     * @return Order with lastest timestamp
+     */
+
+    Order getLastOrder();
+    /**
      * List all orders (events) for given account
      * @param accountId Account id
      * @return List<Order>

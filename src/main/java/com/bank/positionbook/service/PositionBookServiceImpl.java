@@ -57,16 +57,18 @@ public class PositionBookServiceImpl implements PositionBookService{
         } else if (orderType.equals(EventType.SELL)){
             userSecurity.getCurrentPosition().getAndAdd(-orderRequest.getAmount());
         } else if (orderType.equals(EventType.CANCEL)){
-            Order tobeCancelled = orderService.getOrderById(orderRequest.getId());
-            EventType toCancelledType = tobeCancelled.getType();
-            if (tobeCancelled != null) {
+            final Order tobeCancelled = orderService.getOrderById(orderRequest.getId());
+            final Order lastOrder = orderService.getLastOrder();
+            // Also check this is the latest order if required.
+            final EventType toCancelledType = tobeCancelled.getType();
+            if (tobeCancelled != null && tobeCancelled.getId().equals(lastOrder.getId())) {
                 tobeCancelled.setCancelled(true);
                 if (toCancelledType.equals(EventType.BUY)) {
                     userSecurity.getCurrentPosition().getAndAdd(-tobeCancelled.getAmount());
                 } else if (toCancelledType.equals(EventType.SELL)){
                     userSecurity.getCurrentPosition().getAndAdd(tobeCancelled.getAmount());
                 }
-            }
+            } else return null;
         } else {
             // not supported event type; Bad request, orderType not in (SELL, BUY, CANCEL)
             return null;

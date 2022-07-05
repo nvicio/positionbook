@@ -1,6 +1,6 @@
 # Simple Position Book 
 
-###  Documentation
+##  Documentation
 This is a simple position book web app - built as a Spring Restful application.
 According to the problem definition, several assumptions were made:
 * Event order can only accept one of the types "BUY", "SELL", "CANCEL", otherwise will return a 400 Bad Request.
@@ -9,14 +9,14 @@ According to the problem definition, several assumptions were made:
 * On Cancelling an order: assuming we can only cancel your last order. Otherwise, if we cancel an order happened long ago in the past (processed, cleared), any the subsequent orders that relying on the position from that order will be impacted (For example a BUY order was canceled then the subsequent SELL is not possible if the current position does not allow).
 * From the requirement: The system should keep the data in memory (not in a database or in the file system)
 
-Quick commands:
+_Quick commands:_
 - To run the application: `mvn spring-boot:run`
 - To run the test scenarios: `mvn test`
 - To run a particular test case: `mvn test -Dtest="PositionBookServiceTests#givenSecurity_whenSellThenCancel_thenAmountUnchanged*"`
 - Once the application is started, swagger API link can be seen here: http://localhost:8080/swagger-ui.html
 
-### API reference
-#### Processing order (event)
+## API reference
+### Processing order (event)
 POST to `http:/localhost:8080/positionbook/event`
 
 Request body: `orderType: one of "BUY", "SELL", "CANCEL"`
@@ -49,7 +49,7 @@ Response Codes: 200 OK, 400 Bad Request. Response body: The order and timestamp 
   "cancelled": false
 }
 ```
-#### Obtain given position - orders (event)
+### Obtain given position - orders (events)
 GET to `http:/localhost:8080/positionbook/position/{accountId}?securityId=11`
 
 Response: Position of given securities in an account
@@ -74,7 +74,7 @@ Curl:
 curl -X GET --header 'Accept: application/json' 'http://localhost:8080/positionbook/position/100/111'
 ```
 Response Codes: 200 OK, 400 Bad Request. 
-#### Obtain history orders (event)
+### Obtain history orders (events)
 GET to `http:/localhost:8080/positionbook/position/{accountId}?securityId=11`
 
 Response: List of orders (events) of given securities in an account
@@ -100,7 +100,7 @@ Response: List of orders (events) of given securities in an account
   },
   {
     "id": 4,
-    "type": "BUY",
+    "type": "SELL",
     "accountId": 10,
     "securityId": 101,
     "amount": 10,
@@ -113,7 +113,6 @@ Curl:
 ```
 curl -X GET --header 'Accept: application/json' 'http://localhost:8080/positionbook/order/10?securityId=101'
 ```
-Response Codes: 200 OK, 400 Bad Request. 
 ### Possible further improvements
 - More logic on error handling and validation based on business requirements
 - UI to display asset position movements over time

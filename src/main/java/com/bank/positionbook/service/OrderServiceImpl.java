@@ -6,9 +6,11 @@ import com.bank.positionbook.entity.Order;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class OrderServiceImpl implements OrderService{
 
     private static final AtomicLong orderIdCount = new AtomicLong(0);
     // CopyOnWriteArrayList has the disadvantage of being very expensive on write (but cheap for reads)
-    private static final Queue<Order> orders = new ConcurrentLinkedQueue<>();
+    private static final Deque<Order> orders = new ConcurrentLinkedDeque<>();
 
     /**
      * Return the order for given orderId
@@ -31,6 +33,15 @@ public class OrderServiceImpl implements OrderService{
         return orders.stream()
                 .filter(o -> Objects.equals(o.getId(), orderId))
                 .findFirst().orElse(null);
+    }
+
+    /**
+     * Return the last order for given deque
+     * @return Order with lastest timestamp
+     */
+    @Override
+    public Order getLastOrder() {
+        return orders.getLast();
     }
 
     /**

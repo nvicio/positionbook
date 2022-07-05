@@ -94,7 +94,7 @@ public class PositionBookServiceTests {
     }
 
     @Test
-    public void givenSecurity_whenBuyThenCancel_thenAmountUnchanged(){
+    public void givenSecurity_whenBuyThenCancelNotLast_thenAmountUnchanged(){
         final Long accountId = 100L;
         final Long securityId = 113L;
         final OrderRequest buyRequest =  OrderRequest.builder()
@@ -112,7 +112,7 @@ public class PositionBookServiceTests {
                 .build();
 
         final Order sellOrder = positionBookService.processOrder(sellRequest);
-        // Cancel sell request
+        // Cancel buy request, not last order -> nothing happens
         final OrderRequest cancelRequest =  OrderRequest.builder()
                 .orderType("CANCEL")
                 .id(buyOrder.getId())
@@ -122,7 +122,39 @@ public class PositionBookServiceTests {
 
         positionBookService.processOrder(cancelRequest);
         final UserSecurity userSecurity = positionBookService.getSecurityForUser(accountId, securityId);
-        Assertions.assertEquals(-10, userSecurity.getCurrentPosition().get());
+        Assertions.assertEquals(40, userSecurity.getCurrentPosition().get());
+    }
+
+    @Test
+    public void givenSecurity_whenBuySellThenCancelLastOrder_thenAmountChanged(){
+        final Long accountId = 105L;
+        final Long securityId = 113L;
+        final OrderRequest buyRequest =  OrderRequest.builder()
+                .orderType("BUY")
+                .accountId(accountId)
+                .securityId(securityId)
+                .amount(50)
+                .build();
+        final Order buyOrder = positionBookService.processOrder(buyRequest);
+        final OrderRequest sellRequest =  OrderRequest.builder()
+                .orderType("SELL")
+                .accountId(accountId)
+                .securityId(securityId)
+                .amount(10)
+                .build();
+
+        final Order sellOrder = positionBookService.processOrder(sellRequest);
+        // Cancel sell request, last order -> successfully canceled
+        final OrderRequest cancelRequest =  OrderRequest.builder()
+                .orderType("CANCEL")
+                .id(sellOrder.getId())
+                .accountId(accountId)
+                .securityId(securityId)
+                .build();
+
+        positionBookService.processOrder(cancelRequest);
+        final UserSecurity userSecurity = positionBookService.getSecurityForUser(accountId, securityId);
+        Assertions.assertEquals(50, userSecurity.getCurrentPosition().get());
     }
 
 
