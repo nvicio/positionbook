@@ -24,6 +24,7 @@ Request body: `orderType: one of "BUY", "SELL", "CANCEL"`
 {
   "accountId": 100,
   "amount": 10,
+  "id" : 1, // Id is used for cancel request only
   "orderType": "BUY",
   "securityId": 111
 }
