@@ -52,7 +52,7 @@ Response Codes: 200 OK, 400 Bad Request. Response body: The order and timestamp 
 ```
 ### Obtain given position - orders (events)
 GET to `http:/localhost:8080/positionbook/position/{accountId}?securityId=11`
-
+When _securityId_ param not present, return all security positions for given account.
 Response: Position of given securities in an account
 ```json
 [
@@ -77,6 +77,7 @@ curl -X GET --header 'Accept: application/json' 'http://localhost:8080/positionb
 Response Codes: 200 OK, 400 Bad Request. 
 ### Obtain history orders (events)
 GET to `http:/localhost:8080/positionbook/position/{accountId}?securityId=11`
+When _securityId_ param not present, return all events for given account.
 
 Response: List of orders (events) of given securities in an account
 ```json
